@@ -28,6 +28,11 @@ FROM ibmcom/websphere-liberty:kernel-java8-ibmjava-ubi
 
 ARG TLS=true
 
+ARG MP_MONITORING=true
+ARG HTTP_ENDPOINT=false
+
+USER root
+
 
 RUN mkdir -p /opt/ol/wlp/usr/shared/config/lib/global
 COPY --chown=1001:0 --from=build-stage /config/ /config/
@@ -42,6 +47,8 @@ COPY --chown=1001:0 --from=build-stage /sharedlibs/ /opt/ol/wlp/usr/shared/confi
 
 # This script will add the requested server configurations, apply any interim fixes and populate caches to optimize runtime
 RUN configure.sh
+
+USER 1001
 
 # Upgrade to production license if URL to JAR provided
 ARG LICENSE_JAR_URL
